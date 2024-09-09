@@ -3,32 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebSocket Latency Test</title>
+  <title>TOTVS Apps Latency Test</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 50px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #container {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
     #latency {
-      font-size: 2em;
+      font-size: 3em;
       color: green;
     }
+
     #connection-status {
-      font-size: 1.5em;
+      font-size: 2em;
       color: red;
     }
+
     #chart {
-      margin-top: 50px;
+      width: 80%;
+      max-width: 600px;
+      height: 300px;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>WebSocket Latency Test</h1>
-  <p id="connection-status">Connecting...</p>
-  <p>Current Latency: <span id="latency">0</span> ms</p>
+  <div id="container">
+    <h1>TOTVS Apps Latency Test</h1>
+    <p id="connection-status">Connecting...</p>
+    <p>Current Latency: <span id="latency">0</span> ms</p>
 
-  <canvas id="chart" width="400" height="400"></canvas>
+    <canvas id="chart"></canvas>
+  </div>
 
   <script type="text/javascript" src="./socket.js"></script>
 

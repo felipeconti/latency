@@ -1,45 +1,62 @@
 const serverURL = 'ws://localhost:8080/ws'; // Replace with your WebSocket server URL
-const socket = new WebSocket(serverURL);
+let socket;
+let reconnectInterval = 1000; // 1 second
 
 const latencyDisplay = document.getElementById('latency');
 const connectionStatus = document.getElementById('connection-status');
 
 const latencyHistory = [];
 const maxHistory = 50;
-
 let chart;
 
-// Show connection status
-socket.onopen = () => {
-  connectionStatus.textContent = "Connected!";
-  connectionStatus.style.color = "green";
-  startLatencyTest();
-};
+function connect() {
+  socket = new WebSocket(serverURL);
 
-socket.onclose = () => {
-  connectionStatus.textContent = "Disconnected!";
-  connectionStatus.style.color = "red";
-};
+  // Show connection status
+  socket.onopen = () => {
+    connectionStatus.textContent = "Connected!";
+    connectionStatus.style.color = "green";
+    startLatencyTest();
+  };
 
-// Handle incoming messages
-socket.onmessage = (event) => {
-  const receiveTime = Date.now();
-  const sentTime = parseInt(event.data, 10);
-  const latency = receiveTime - sentTime;
+  socket.onclose = () => {
+    connectionStatus.textContent = "Disconnected! Attempting to reconnect...";
+    connectionStatus.style.color = "red";
+    reconnect();
+  };
 
-  latencyDisplay.textContent = latency;
+  socket.onerror = (error) => {
+    console.log("WebSocket error: ", error);
+  };
 
-  // Add to history for chart display
-  if (latencyHistory.length >= maxHistory) latencyHistory.shift();
-  latencyHistory.push(latency);
-  updateChart();
-};
+  // Handle incoming messages
+  socket.onmessage = (event) => {
+    const receiveTime = Date.now();
+    const sentTime = parseInt(event.data, 10);
+    const latency = receiveTime - sentTime;
+
+    latencyDisplay.textContent = latency;
+
+    // Add to history for chart display
+    if (latencyHistory.length >= maxHistory) latencyHistory.shift();
+    latencyHistory.push(latency);
+    updateChart();
+  };
+}
+
+function reconnect() {
+  setTimeout(() => {
+    connect(); // Try to reconnect
+  }, reconnectInterval);
+}
 
 function startLatencyTest() {
   setInterval(() => {
-    const currentTime = Date.now();
-    socket.send(currentTime.toString());
-  }, 1000); // Send ping every 1 second
+    if (socket.readyState === WebSocket.OPEN) {
+      const currentTime = Date.now();
+      socket.send(currentTime.toString());
+    }
+  }, 500); // Send ping every 0.5 seconds
 }
 
 function updateChart() {
@@ -72,3 +89,6 @@ function updateChart() {
     chart.update();
   }
 }
+
+// Start connection on page load
+connect();
