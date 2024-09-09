@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Latency Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+    #latency {
+      font-size: 2em;
+      color: green;
+    }
+    #connection-status {
+      font-size: 1.5em;
+      color: red;
+    }
+    #chart {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>WebSocket Latency Test</h1>
+  <p id="connection-status">Connecting...</p>
+  <p>Current Latency: <span id="latency">0</span> ms</p>
+
+  <canvas id="chart" width="400" height="400"></canvas>
+
+  <script type="text/javascript" src="./socket.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
