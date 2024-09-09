@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOTVS Apps Latency Test</title>
+  <title>WebSocket Latency Test with Reconnection (Dark Mode)</title>
   <style>
     * {
       margin: 0;
@@ -19,6 +19,8 @@
       align-items: center;
       font-family: Arial, sans-serif;
       overflow: hidden;
+      background-color: #121212;
+      color: #ffffff;
     }
 
     #container {
@@ -31,14 +33,18 @@
       align-items: center;
     }
 
+    h1 {
+      color: #ffffff;
+    }
+
     #latency {
       font-size: 3em;
-      color: green;
+      color: #00e676; /* Green accent for latency */
     }
 
     #connection-status {
       font-size: 2em;
-      color: red;
+      color: #ff5252; /* Red accent for connection status */
     }
 
     #chart {
@@ -47,11 +53,15 @@
       height: 300px;
       margin-top: 30px;
     }
+
+    canvas {
+      background-color: #1e1e1e; /* Dark background for the chart */
+    }
   </style>
 </head>
 <body>
   <div id="container">
-    <h1>TOTVS Apps Latency Test</h1>
+    <h1>WebSocket Latency Test</h1>
     <p id="connection-status">Connecting...</p>
     <p>Current Latency: <span id="latency">0</span> ms</p>
 

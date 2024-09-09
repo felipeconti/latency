@@ -1,6 +1,7 @@
 const serverURL = 'ws://localhost:8080/ws'; // Replace with your WebSocket server URL
 let socket;
-let reconnectInterval = 1000; // 1 second
+let reconnectInterval = 1000; // Start with 1 second
+const maxReconnectInterval = 16000; // Maximum interval 16 seconds
 
 const latencyDisplay = document.getElementById('latency');
 const connectionStatus = document.getElementById('connection-status');
@@ -15,13 +16,14 @@ function connect() {
   // Show connection status
   socket.onopen = () => {
     connectionStatus.textContent = "Connected!";
-    connectionStatus.style.color = "green";
+    connectionStatus.style.color = "#00e676"; // Green for connected
+    reconnectInterval = 1000; // Reset reconnect interval on successful connection
     startLatencyTest();
   };
 
   socket.onclose = () => {
     connectionStatus.textContent = "Disconnected! Attempting to reconnect...";
-    connectionStatus.style.color = "red";
+    connectionStatus.style.color = "#ff5252"; // Red for disconnected
     reconnect();
   };
 
@@ -46,6 +48,9 @@ function connect() {
 
 function reconnect() {
   setTimeout(() => {
+    if (reconnectInterval <= maxReconnectInterval) {
+      reconnectInterval *= 2; // Exponential backoff
+    }
     connect(); // Try to reconnect
   }, reconnectInterval);
 }
@@ -56,7 +61,7 @@ function startLatencyTest() {
       const currentTime = Date.now();
       socket.send(currentTime.toString());
     }
-  }, 500); // Send ping every 0.5 seconds
+  }, 1000); // Send ping every 1 second
 }
 
 function updateChart() {
@@ -68,8 +73,8 @@ function updateChart() {
         labels: Array.from({ length: maxHistory }, (_, i) => i + 1),
         datasets: [{
           label: 'Latency (ms)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(0, 230, 118, 0.2)',
+          borderColor: '#00e676',
           data: latencyHistory,
         }]
       },
@@ -77,9 +82,28 @@ function updateChart() {
         scales: {
           x: {
             beginAtZero: true,
+            ticks: {
+              color: '#ffffff' // White labels
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)' // Light grid lines
+            }
           },
           y: {
             beginAtZero: true,
+            ticks: {
+              color: '#ffffff' // White labels
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)' // Light grid lines
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#ffffff' // White labels for the legend
+            }
           }
         }
       }
