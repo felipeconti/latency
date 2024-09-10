@@ -81,7 +81,7 @@ function updateChart() {
       options: {
         scales: {
           x: {
-            beginAtZero: true,
+            beginAtZero: false,
             ticks: {
               color: '#ffffff' // White labels
             },
@@ -90,7 +90,7 @@ function updateChart() {
             }
           },
           y: {
-            beginAtZero: true,
+            beginAtZero: false,
             max: 100,
             ticks: {
               color: '#ffffff' // White labels
