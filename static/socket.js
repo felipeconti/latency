@@ -1,7 +1,6 @@
 const serverURL = 'ws://localhost:8080/ws'; // Replace with your WebSocket server URL
 let socket;
-let reconnectInterval = 1000; // Start with 1 second
-const maxReconnectInterval = 16000; // Maximum interval 16 seconds
+let reconnectInterval = 500; // Start with 1 second
 
 const latencyDisplay = document.getElementById('latency');
 const connectionStatus = document.getElementById('connection-status');
@@ -17,7 +16,6 @@ function connect() {
   socket.onopen = () => {
     connectionStatus.textContent = "Connected!";
     connectionStatus.style.color = "#00e676"; // Green for connected
-    reconnectInterval = 1000; // Reset reconnect interval on successful connection
     startLatencyTest();
   };
 
@@ -48,9 +46,6 @@ function connect() {
 
 function reconnect() {
   setTimeout(() => {
-    if (reconnectInterval <= maxReconnectInterval) {
-      reconnectInterval *= 2; // Exponential backoff
-    }
     connect(); // Try to reconnect
   }, reconnectInterval);
 }
@@ -61,7 +56,7 @@ function startLatencyTest() {
       const currentTime = Date.now();
       socket.send(currentTime.toString());
     }
-  }, 1000); // Send ping every 1 second
+  }, 100);
 }
 
 function updateChart() {
