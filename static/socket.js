@@ -1,6 +1,6 @@
-const serverURL = 'ws://localhost:8080/ws'; // Replace with your WebSocket server URL
+let serverURL;
 let socket;
-let reconnectInterval = 500; // Start with 1 second
+let reconnectInterval = 500;
 
 const latencyDisplay = document.getElementById('latency');
 const connectionStatus = document.getElementById('connection-status');
@@ -8,6 +8,11 @@ const connectionStatus = document.getElementById('connection-status');
 const latencyHistory = [];
 const maxHistory = 50;
 let chart;
+
+if (window.location.protocol == 'http:') 
+  serverURL = "ws://" + location.host + "/ws";
+else
+  serverURL = "wss://" + location.host + "/ws";
 
 function connect() {
   socket = new WebSocket(serverURL);

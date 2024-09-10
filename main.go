@@ -41,7 +41,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 func setupRoutes() {
 	http.HandleFunc("/ws", wsEndpoint)
 
-	fs := http.FileServer(http.Dir("./static"))
+	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 }
 

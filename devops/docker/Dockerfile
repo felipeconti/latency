@@ -8,8 +8,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -mod=readonly -v -o app main.go
 
 FROM gcr.io/distroless/static:nonroot AS base
-COPY --from=builder /sources/app /
+COPY --from=builder /sources /sources
 USER nonroot:nonroot
-CMD ["/app"]
+WORKDIR /sources
+CMD ["/sources/app"]
 
 FROM base AS final

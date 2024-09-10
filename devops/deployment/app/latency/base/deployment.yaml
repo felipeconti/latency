@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: latency
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: latency
+  template:
+    metadata:
+      labels:
+        app: latency
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: latency
+              topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: latency
+        image: latency
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 2000m
+            memory: 50Mi
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
