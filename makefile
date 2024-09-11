@@ -5,13 +5,15 @@ SHELL := /bin/bash
 
 REGISTRY ?= localhost:5001
 
-LOGGING_LEVEL?=debug
-
 NAME?=latency
 
 NAMESPACE?=${NAME}
 
 RUN?=
+
+KUBECONFIG?=~/.kube/config
+
+OVERLAY?=local
 
 run: docker-build
 	docker run -it --rm \
@@ -22,8 +24,17 @@ run: docker-build
 all:
 	$(MAKE) docker-build
 	$(MAKE) docker-push
-	$(MAKE) deploy
-	$(MAKE) deploy-rollout
+	$(MAKE) deploy-with-rollout
+
+all-cloud:
+	REGISTRY=felipeconti $(MAKE) docker-build
+	REGISTRY=felipeconti $(MAKE) docker-push
+	KUBECONFIG=~/projects/config-workload-tcloud \
+	OVERLAY=cloud \
+	$(MAKE) deploy-with-rollout
+	KUBECONFIG=~/projects/config-workload-vsphere \
+	OVERLAY=cloud \
+	$(MAKE) deploy-with-rollout
 
 docker-build:
 	docker build \
@@ -35,7 +46,7 @@ docker-push:
 	docker push ${REGISTRY}/${NAME}:latest
 
 deploy:
-	kubectl apply -k devops/deployment/app/${NAME}/overlay/local
+	kubectl --kubeconfig ${KUBECONFIG} apply -k devops/deployment/app/${NAME}/overlay/${OVERLAY}
 
-deploy-rollout:
-	kubectl -n ${NAMESPACE} rollout restart deployment/${NAME}
+deploy-with-rollout: deploy
+	kubectl --kubeconfig ${KUBECONFIG} -n ${NAMESPACE} rollout restart deployment/${NAME}
