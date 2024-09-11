@@ -111,7 +111,7 @@ function updateChart() {
     });
   } else {
     chart.data.datasets[0].data = latencyHistory;
-    chart.update();
+    chart.update('none');
   }
 }
 
