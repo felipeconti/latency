@@ -91,7 +91,7 @@ function updateChart() {
           },
           y: {
             beginAtZero: false,
-            max: 100,
+            max: 200,
             ticks: {
               color: '#ffffff' // White labels
             },
