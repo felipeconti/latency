@@ -11,7 +11,7 @@ NAME?=latency
 
 NAMESPACE?=${NAME}
 
-RUN?=/sources/app
+RUN?=
 
 run: docker-build
 	docker run -it --rm \
