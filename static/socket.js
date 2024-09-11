@@ -1,6 +1,6 @@
 let serverURL;
 let socket;
-let reconnectInterval = 500;
+let reconnectInterval = 10;
 
 const latencyDisplay = document.getElementById('latency');
 const connectionStatus = document.getElementById('connection-status');
