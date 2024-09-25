@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -14,6 +15,9 @@ var upgrader = websocket.Upgrader{
 }
 
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Method: %v | Proto: %v | Host: %v | RequestURI: %v | Headers: %v",
+		r.Method, r.Proto, r.Host, r.RequestURI, r.Header)
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -24,6 +28,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	for {
 		// Read message from browser
 		mt, message, err := conn.ReadMessage()
+		log.Println("Message:", message)
 		if err != nil {
 			log.Println("Error reading message:", err)
 			break
@@ -38,8 +43,15 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func health(w http.ResponseWriter, r *http.Request) {
+	msg := `{"Method":"%v","Proto":"%v","Host":"%v","RequestURI":"%v","Headers":"%s"}`
+	log.Printf(msg, r.Method, r.Proto, r.Host, r.RequestURI, r.Header)
+	fmt.Fprintf(w, msg, r.Method, r.Proto, r.Host, r.RequestURI, r.Header)
+}
+
 func setupRoutes() {
 	http.HandleFunc("/ws", wsEndpoint)
+	http.HandleFunc("/health", health)
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)

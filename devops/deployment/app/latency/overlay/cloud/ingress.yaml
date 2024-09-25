@@ -3,19 +3,29 @@ kind: Ingress
 metadata:
   name: latency
   annotations:
-    cert-manager.io/cluster-issuer: cloudflare-dns-issuer-cloudflare-totvs-dev
-    nginx.ingress.kubernetes.io/server-alias: ~^latency.*\.poc-multicluster\.totvs\.dev$
+    # cert-manager.io/cluster-issuer: cloudflare-dns-issuer-cloudflare-totvs-dev
+    nginx.ingress.kubernetes.io/server-alias: ~^latency.*\.*\.totvs\.dev$
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
-  tls:
-  - hosts:
-    - "*.vsphere.poc-multicluster.totvs.dev"
-    - "*.tcloud.poc-multicluster.totvs.dev"
-    - "*.poc-multicluster.totvs.dev"
-    - "*.totvs.dev"
-    secretName: latency-tls
+  # tls:
+  # - hosts:
+  #   - "*.vsphere.poc-multicluster.totvs.dev"
+  #   - "*.tcloud.poc-multicluster.totvs.dev"
+  #   - "*.poc-multicluster.totvs.dev"
+  #   # - "*.totvs.dev"
+  #   secretName: latency-tls
   rules:
+  - host: latency.alpha.dev.totvs.app
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: latency
+              port:
+                name: http
   - host: latency.totvs.dev
     http:
       paths:
