@@ -16,37 +16,7 @@ spec:
   #   # - "*.totvs.dev"
   #   secretName: latency-tls
   rules:
-  - host: latency.alpha.dev.totvs.app
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: latency
-              port:
-                name: http
-  - host: latency.totvs.dev
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: latency
-              port:
-                name: http
-  - host: latency.tcloud.poc-multicluster.totvs.dev
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: latency
-              port:
-                name: http
-  - host: latency.vsphere.poc-multicluster.totvs.dev
+  - host: latency.poc-multicluster.totvs.app
     http:
       paths:
         - path: /

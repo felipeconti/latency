@@ -29,10 +29,13 @@ all:
 all-cloud:
 	REGISTRY=felipeconti $(MAKE) docker-build
 	REGISTRY=felipeconti $(MAKE) docker-push
-	KUBECONFIG=~/projects/config-workload-tcloud \
+	KUBECONFIG=~/projects/config-poc-multicluster-tcloud1 \
 	OVERLAY=cloud \
 	$(MAKE) deploy-with-rollout
-	KUBECONFIG=~/projects/config-workload-vsphere \
+	KUBECONFIG=~/projects/config-poc-multicluster-tcloud2 \
+	OVERLAY=cloud \
+	$(MAKE) deploy-with-rollout
+	KUBECONFIG=~/projects/config-poc-multicluster-tcloud3 \
 	OVERLAY=cloud \
 	$(MAKE) deploy-with-rollout
 
